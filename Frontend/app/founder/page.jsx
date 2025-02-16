@@ -1,16 +1,18 @@
 "use client";
-
+import { use } from "react";
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-export default function FounderPage() {
+export default function FounderPage({ searchParams }) {
   const [mentors, setMentors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const params = use(searchParams);
+  const field = params?.field || "";
 
   useEffect(() => {
     fetch(
-      "http://127.0.0.1:8000/findMentors?business_idea=medicine&location=India"
+      `http://127.0.0.1:8000/findMentors?business_idea=${field}&location=India`
     )
       .then((res) => {
         if (!res.ok) {
@@ -35,7 +37,7 @@ export default function FounderPage() {
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold text-center text-gray-900 mb-8">
-          Connect with Founders
+          Connect with Mentors
         </h1>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {mentors.map((mentor, index) => (

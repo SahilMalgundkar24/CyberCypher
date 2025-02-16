@@ -20,7 +20,6 @@ gemini_key = os.getenv("GEMINI_API_KEY")
 origins = [
     "http://localhost",
     "http://localhost:3000",
-    # Add other origins as needed
 ]
 
 app.add_middleware(

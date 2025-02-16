@@ -17,14 +17,13 @@ export default function StartupResourcesPage({ searchParams }) {
   const params = use(searchParams);
   const field = params?.field || "";
   const description = params?.description || "";
-
   const resources = [
     {
       title: "Connect with Founders",
       description:
         "Network with other founders in similar fields to share experiences and insights.",
       icon: <Users className="h-6 w-6" />,
-      action: () => router.push("/founder"),
+      action: () => router.push(`/founder?field=${field}`),
     },
     {
       title: "Find Angel Investors",
@@ -44,7 +43,7 @@ export default function StartupResourcesPage({ searchParams }) {
       description:
         "Analyze current market trends to validate your startup idea.",
       icon: <TrendingUp className="h-6 w-6" />,
-      action: () => console.log("Navigate to market analysis page"),
+      action: () => router.push(`/market?desc=${description}`),
     },
   ];
 

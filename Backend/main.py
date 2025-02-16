@@ -19,8 +19,7 @@ gemini_key = os.getenv("GEMINI_API_KEY")
 # Set up CORS
 origins = [
     "http://localhost",
-    "http://localhost:8000",
-    # Add other origins as needed
+    "http://localhost:3000",
 ]
 
 app.add_middleware(

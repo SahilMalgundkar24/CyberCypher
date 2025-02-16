@@ -12,7 +12,12 @@ export default function FounderPage() {
     fetch(
       "http://127.0.0.1:8000/findMentors?business_idea=medicine&location=India"
     )
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
       .then((data) => {
         setMentors(Array.isArray(data) ? data : [data]);
         setLoading(false);

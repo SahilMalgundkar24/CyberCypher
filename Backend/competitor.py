@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 class CompetitorAnalysis:
-    def __init__(self, serpapi_key: str, gemini_key: str):
+    def _init_(self, serpapi_key: str, gemini_key: str):
         """
         Initialize the CompetitorAnalysis class with API keys and models.
         """
@@ -255,5 +255,5 @@ def main():
     print(feasibility_report)
 
 
-if __name__ == "__main__":
+if "__name__" == "__main__":
     main()

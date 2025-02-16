@@ -1,33 +1,61 @@
 "use client";
 import React, { useState } from "react";
 import { Send } from "lucide-react";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI("AIzaSyAjU-G6ZALGIx3i5npDVr7PdBX7_Uxdw70");
 
 const Page = () => {
   const [messages, setMessages] = useState([
     { id: 1, text: "Hello! How can I help you today?", isBot: true },
   ]);
   const [inputMessage, setInputMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
     if (inputMessage.trim() === "") return;
 
-    // Add user message
+    // Add user message to chat
     const newUserMessage = {
       id: messages.length + 1,
       text: inputMessage,
       isBot: false,
     };
 
-    // Add bot response (placeholder)
-    const newBotMessage = {
-      id: messages.length + 2,
-      text: "This is a placeholder response. Connect to a backend to get real responses!",
-      isBot: true,
-    };
-
-    setMessages([...messages, newUserMessage, newBotMessage]);
+    setMessages([...messages, newUserMessage]);
     setInputMessage("");
+    setLoading(true);
+
+    try {
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const response = await model.generateContent(inputMessage);
+      let botReply = await response.response.text();
+
+      // Remove Markdown symbols and ensure new lines are preserved
+      botReply = botReply.replace(/[*_#`]/g, "").trim();
+
+      // Add bot response to chat
+      const newBotMessage = {
+        id: messages.length + 2,
+        text: botReply,
+        isBot: true,
+      };
+
+      setMessages((prevMessages) => [...prevMessages, newBotMessage]);
+    } catch (error) {
+      console.error("Error fetching response:", error);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          id: messages.length + 2,
+          text: "Error fetching response.",
+          isBot: true,
+        },
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -37,7 +65,7 @@ const Page = () => {
           {/* Chat Header */}
           <div className="p-4 border-b">
             <h2 className="text-xl font-semibold text-gray-800">
-              Chat Assistant
+              Business ChatBot
             </h2>
           </div>
 
@@ -58,10 +86,20 @@ const Page = () => {
                         : "bg-black text-white"
                     }`}
                   >
-                    <p className="text-sm md:text-base">{message.text}</p>
+                    {/* Preserve new lines */}
+                    <p className="text-sm md:text-base whitespace-pre-wrap">
+                      {message.text}
+                    </p>
                   </div>
                 </div>
               ))}
+              {loading && (
+                <div className="flex justify-start">
+                  <div className="p-3 rounded-lg bg-gray-100 text-gray-800">
+                    <p className="text-sm md:text-base">Typing...</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -78,6 +116,7 @@ const Page = () => {
               <button
                 type="submit"
                 className="p-2 bg-black text-white rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black"
+                disabled={loading}
               >
                 <Send className="w-5 h-5" />
               </button>

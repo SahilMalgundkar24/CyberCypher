@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 class CompetitorAnalysis:
-    def _init_(self, serpapi_key: str, gemini_key: str):
+    def __init__(self, serpapi_key: str, gemini_key: str):
         """
         Initialize the CompetitorAnalysis class with API keys and models.
         """
@@ -211,49 +211,3 @@ class CompetitorAnalysis:
         except Exception as e:
             logger.error(f"Error analyzing feasibility with Gemini: {str(e)}")
             return "Unable to generate feasibility report."
-
-
-def main():
-    """
-    Main function to execute the competitor analysis and feasibility check.
-    """
-    load_dotenv()
-    serpapi_key = os.getenv("SERPAPI_API_KEY")
-    gemini_key = os.getenv("GEMINI_API_KEY")
-
-    if not serpapi_key or not gemini_key:
-        print("Please set the SERPAPI_API_KEY and GEMINI_API_KEY environment variables.")
-        return
-
-    analyzer = CompetitorAnalysis(serpapi_key, gemini_key)
-
-    # Get the app idea from the user
-    app_idea = input("Enter your app idea: ")
-
-    # Search for competitors
-    competitors = analyzer.search_competitors(app_idea)
-    print(f"Found {len(competitors)} competitors: {', '.join(competitors)}")
-
-    # Analyze competitors
-    competitors_data = []
-    for competitor in competitors:
-        data = analyzer.analyze_competitor(competitor)
-        competitors_data.append(data)
-        print(f"Analyzed {competitor}:")
-        print(f"Sentiment: {data['sentiment']}")
-        print(f"Summary: {data['summary']}")
-        print("---")
-
-    # Generate differentiation suggestions
-    suggestion = analyzer.suggest_differentiation(competitors_data)
-    print("Differentiation suggestion:")
-    print(suggestion)
-
-    # Analyze feasibility using Gemini
-    feasibility_report = analyzer.analyze_feasibility(app_idea, competitors_data)
-    print("\nFeasibility Report:")
-    print(feasibility_report)
-
-
-if "__name__" == "__main__":
-    main()

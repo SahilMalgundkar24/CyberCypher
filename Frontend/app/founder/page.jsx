@@ -1,8 +1,13 @@
 "use client";
 import { use } from "react";
 import { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
 
 export default function FounderPage({ searchParams }) {
   const [mentors, setMentors] = useState([]);

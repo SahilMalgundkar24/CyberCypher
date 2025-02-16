@@ -8,8 +8,8 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+} from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
 import { Users, DollarSign, MessageSquare, TrendingUp } from "lucide-react";
 
 export default function StartupResourcesPage({ searchParams }) {
